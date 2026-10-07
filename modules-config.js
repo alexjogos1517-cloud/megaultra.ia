@@ -9,9 +9,9 @@ window.BASE_AGENTS = [
   { id:'gerador-ganchos', title:'Gerador de Ganchos', file:'gerador-ganchos.html', category:'CONTEÚDO', status:'test', icon:'fa-anchor', destaque:false }
 ];
 window.getModulesState = function(){
-  try{ const custom = JSON.parse(localStorage.getItem('cm_agentes_custom')||'null'); if(custom && custom.length>0) return custom; }catch(e){}
+  try{ const custom=JSON.parse(localStorage.getItem('cm_agentes_custom')||'null'); if(custom&&custom.length>0) return custom; }catch(e){}
   return window.BASE_AGENTS;
 };
-window.getActiveAgents = function(){ return window.getModulesState().filter(a=>a.status==='active'); };
-window.getMaintenanceAgents = function(){ return window.getModulesState().filter(a=>a.status==='maintenance'); };
-window.getDestaques = function(){ return window.getModulesState().filter(a=>a.destaque && a.status==='active'); };
+window.getActiveAgents=function(){return window.getModulesState().filter(a=>a.status==='active');};
+window.getMaintenanceAgents=function(){return window.getModulesState().filter(a=>a.status==='maintenance');};
+window.getDestaques=function(){return window.getModulesState().filter(a=>a.destaque && a.status==='active');};
