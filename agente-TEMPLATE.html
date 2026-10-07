@@ -1,83 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[NOME DO AGENTE] - CineMorph AI</title>
-<script src="modules-config.js"></script>
-<script src="menu-fixo.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<style>::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:9px}</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>[NOME] - CineMorph AI</title>
+<script src="modules-config.js"></script><script src="menu-fixo.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-[#080A0F] text-slate-100 flex h-screen overflow-hidden font-sans">
-<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col shrink-0">
-  <div class="p-5 border-b border-slate-900 flex items-center gap-3">
-    <div class="w-10 h-10 bg-[#7C3AED] rounded-xl flex items-center justify-center font-black text-white text-sm">CM</div>
-    <div><h1 class="text-[13px] font-extrabold text-white uppercase tracking-widest">CINEMORPH AI</h1><p class="text-[11px] text-slate-500">Central de Agentes</p></div>
-  </div>
-  <div class="p-3 border-b border-slate-900/50 space-y-2">
-    <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 text-slate-400 text-[12px]"><i class="fa-solid fa-house w-4"></i> Início</a>
-    <div class="relative"><input id="searchMenu" placeholder="Buscar agente..." class="w-full bg-black border border-slate-800 rounded-lg px-3 py-2 text-[12px] text-white pl-8 outline-none focus:border-violet-600"><i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 text-[11px]"></i></div>
-  </div>
-  <nav id="dynamicMenu" class="flex-1 overflow-y-auto px-3 py-4 space-y-6"></nav>
-  <div id="fixedMenuSlot" class="p-3 border-t border-slate-900"></div>
-</aside>
-<main class="flex-1 overflow-y-auto bg-[#080A0F] p-6 md:p-8">
-  <div class="max-w-4xl mx-auto space-y-6">
-    <div class="flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center"><i class="fa-solid fa-wand-magic-sparkles text-violet-400"></i></div>
-      <div>
-        <h2 class="text-[20px] font-black text-white">[NOME DO AGENTE]</h2>
-        <p class="text-[12px] text-slate-400">[DESCRIÇÃO CURTA DO QUE O AGENTE FAZ]</p>
-      </div>
-      <span class="ml-auto px-3 py-1 bg-emerald-950/30 border border-emerald-900/30 rounded-full text-[10px] text-emerald-300 uppercase">Ativo</span>
-    </div>
-
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-      <label class="text-[11px] font-bold uppercase tracking-widest text-white">Entrada / Prompt</label>
-      <textarea id="inputPrompt" placeholder="Descreva aqui o vídeo, nicho, gancho..." class="w-full h-32 bg-black border border-slate-800 rounded-xl p-4 text-[13px] text-white outline-none focus:border-violet-600 resize-none"></textarea>
-      <div class="flex gap-2">
-        <button id="btnGerar" class="flex-1 py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-bold text-[13px] transition">Gerar com Gemini</button>
-        <button onclick="document.getElementById('inputPrompt').value=''" class="px-5 py-3 bg-black border border-slate-800 text-slate-400 rounded-xl text-[12px]">Limpar</button>
-      </div>
-    </div>
-
-    <div id="boxResultado" class="bg-[#0F111A] border border-slate-800 rounded-2xl p-6 hidden">
-      <div class="flex items-center justify-between mb-3"><h3 class="text-[12px] font-black uppercase text-white">Resultado</h3><button onclick="copiarRes()" class="text-[11px] text-violet-300 hover:text-white">Copiar</button></div>
-      <pre id="resultadoTxt" class="whitespace-pre-wrap text-[13px] text-slate-200 leading-relaxed"></pre>
-    </div>
-
-    <div class="bg-black/50 border border-slate-900 rounded-xl p-4 text-[11px] text-slate-500">
-      Template v16 — Menu limpo (Início + Suporte/Config no rodapé), status controlado via modules-config.js, chave Gemini em configuracoes.html
-    </div>
-  </div>
-</main>
+<body class="bg-[#080A0F] text-slate-100 flex h-screen overflow-hidden">
+<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col"><div class="p-5 border-b border-slate-900 flex items-center gap-3"><div class="w-10 h-10 bg-[#7C3AED] rounded-xl flex items-center justify-center font-black">CM</div><div><h1 class="text-[13px] font-extrabold text-white uppercase">CINEMORPH AI</h1></div></div><div class="p-3 border-b border-slate-900/50"><a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 text-slate-400 text-[12px]"><i class="fa-solid fa-house w-4"></i> Início</a><div id="userInfo" class="mt-2 px-3 py-2 text-[11px] text-slate-500 bg-black/50 rounded-lg border border-slate-900/50"></div></div><nav id="dynamicMenu" class="flex-1 overflow-y-auto px-3 py-4"></nav><div id="fixedMenuSlot" class="p-3 border-t border-slate-900"></div></aside>
+<main class="flex-1 overflow-y-auto p-8"><div class="max-w-5xl mx-auto space-y-6"><div class="flex items-center gap-4"><div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center"><i class="fa-solid fa-robot text-white text-xl"></i></div><div><h2 class="text-2xl font-black text-white">[NOME DO AGENTE]</h2><p class="text-[13px] text-slate-400">Descrição do agente</p></div></div><div class="bg-slate-900 border border-slate-800 rounded-2xl p-6"><input id="inputNicho" placeholder="Digite seu nicho..." class="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-[13px] text-white"><button id="btnGerar" class="mt-3 w-full py-3 bg-violet-600 text-white rounded-xl font-bold">Gerar</button></div><div id="resultadoArea" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6"></div></div></main>
 <script>
-function getKey(){ return localStorage.getItem('cm_gemini_key') || ''; }
-async function gerar(){
-  const prompt = document.getElementById('inputPrompt').value.trim();
-  const key = getKey();
-  const box = document.getElementById('boxResultado');
-  const out = document.getElementById('resultadoTxt');
-  const btn = document.getElementById('btnGerar');
-  if(!prompt){ alert('Digite algo'); return; }
-  if(!key){ alert('Configure a chave Gemini em Configurações'); return; }
-  btn.textContent = 'Gerando...'; btn.disabled = true;
-  box.classList.remove('hidden'); out.textContent = '...';
-  try{
-    const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ contents:[{ parts:[{ text: prompt }]}] })
-    });
-    const d = await r.json();
-    if(!r.ok) throw new Error(d.error?.message || 'Erro API');
-    const txt = d.candidates?.[0]?.content?.parts?.[0]?.text || 'Sem resposta';
-    out.textContent = txt;
-  }catch(e){ out.textContent = '❌ ' + e.message; }
-  finally{ btn.textContent = 'Gerar com Gemini'; btn.disabled = false; }
-}
-function copiarRes(){ const t=document.getElementById('resultadoTxt').innerText; navigator.clipboard.writeText(t); alert('Copiado'); }
-document.getElementById('btnGerar').addEventListener('click', gerar);
+document.getElementById('btnGerar')?.addEventListener('click',()=>{
+  const nicho=document.getElementById('inputNicho').value.trim(); if(!nicho){alert('Digite nicho');return;}
+  const key=localStorage.getItem('cm_gemini_key'); if(!key){if(confirm('Configure Gemini?')) location.href='configuracoes.html'; return;}
+  document.getElementById('resultadoArea').classList.remove('hidden');
+  document.getElementById('resultadoArea').innerHTML=`<p class="text-white">Resultado para: <b>${nicho}</b></p>`;
+});
 </script>
 </body>
 </html>
