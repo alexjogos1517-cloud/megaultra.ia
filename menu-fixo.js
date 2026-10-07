@@ -1,14 +1,17 @@
-(function(){
-  function getCurrentFile(){return (window.location.pathname.split('/').pop()||'index.html').toLowerCase();}
-  function renderMenu(){
-    const nav=document.getElementById('dynamicMenu'); const fixedSlot=document.getElementById('fixedMenuSlot'); if(!nav) return;
-    let mods=[]; try{if(typeof getModulesState==='function') mods=getModulesState();}catch(e){mods=[];}
-    const ativos=mods.filter(m=>m.status==='active'); const grupos={}; ativos.forEach(m=>{if(!grupos[m.category]) grupos[m.category]=[]; grupos[m.category].push(m);});
-    let html=''; Object.keys(grupos).forEach(cat=>{html+=`<div class="space-y-1"><p class="px-3 text-[10px] font-bold uppercase text-slate-500">${cat}</p><div class="space-y-1">`; grupos[cat].forEach(mod=>{const isActive=getCurrentFile()===mod.file.toLowerCase(); html+=`<a href="${mod.file}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[12px] ${isActive?'bg-violet-600/20 border border-violet-600/30 text-violet-200':'hover:bg-slate-900 text-slate-400 hover:text-white'}"><i class="fa-solid ${mod.icon} w-4"></i><span class="flex-1 truncate">${mod.title}</span></a>`;}); html+=`</div></div>`;});
-    if(!html) html='<p class="text-[11px] text-slate-500 px-3">Nenhum agente ativo<br><span class="text-[10px]">Ative em /admin.html</span></p>'; nav.innerHTML=html;
-    const search=document.getElementById('searchMenu'); if(search && !search._bound){search._bound=true; search.addEventListener('input',function(){const q=this.value.toLowerCase(); nav.querySelectorAll('a').forEach(a=>{a.style.display=a.innerText.toLowerCase().includes(q)?'flex':'none';});});}
-    if(fixedSlot){const current=getCurrentFile(); fixedSlot.innerHTML=`<div class="space-y-2"><a href="suporte.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl ${current==='suporte.html'?'bg-slate-800 text-white':'bg-slate-900 border border-slate-800 text-slate-400'} text-[12px]"><i class="fa-solid fa-headset w-4 text-emerald-400"></i> Suporte</a><a href="configuracoes.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl ${current==='configuracoes.html'?'bg-slate-800 text-white':'hover:bg-slate-900 text-slate-500'} text-[12px]"><i class="fa-solid fa-gear w-4"></i> Configurações</a></div>`;}
-  }
-  document.addEventListener('DOMContentLoaded',function(){renderMenu(); setTimeout(renderMenu,500);});
-  window.CMMenu={render:renderMenu};
-})();
+window.BASE_AGENTS = [
+  { id:'clonagem', title:'Clonagem de Vídeo', file:'clonagem.html', category:'VÍDEOS & CLONAGEM', status:'active', icon:'fa-clone', destaque:false },
+  { id:'mestre-30s', title:'Mestre 30s', file:'mestre-30s.html', category:'VÍDEOS & CLONAGEM', status:'active', icon:'fa-stopwatch', destaque:true },
+  { id:'youtube-shorts', title:'YouTube Shorts', file:'youtube-shorts.html', category:'VÍDEOS & CLONAGEM', status:'active', icon:'fa-youtube', destaque:false },
+  { id:'radar-tiktok', title:'Radar TikTok Viral', file:'radar-tiktok.html', category:'ESTRATEGIAS', status:'active', icon:'fa-satellite-dish', destaque:true },
+  { id:'facebook', title:'Facebook Ads', file:'facebook.html', category:'ESTRATEGIAS', status:'active', icon:'fa-bullhorn', destaque:false },
+  { id:'tiktok-shop', title:'TikTok Shop', file:'tiktok-shop.html', category:'ESTRATEGIAS', status:'active', icon:'fa-shop', destaque:false },
+  { id:'tiktok-seedance', title:'TikTok Seedance', file:'tiktok-seedance.html', category:'ESTRATEGIAS', status:'maintenance', icon:'fa-music', destaque:false },
+  { id:'gerador-ganchos', title:'Gerador de Ganchos', file:'gerador-ganchos.html', category:'CONTEÚDO', status:'test', icon:'fa-anchor', destaque:false }
+];
+window.getModulesState = function(){
+  try{ const custom=JSON.parse(localStorage.getItem('cm_agentes_custom')||'null'); if(custom&&custom.length>0) return custom; }catch(e){}
+  return window.BASE_AGENTS;
+};
+window.getActiveAgents=function(){return window.getModulesState().filter(a=>a.status==='active');};
+window.getMaintenanceAgents=function(){return window.getModulesState().filter(a=>a.status==='maintenance');};
+window.getDestaques=function(){return window.getModulesState().filter(a=>a.destaque && a.status==='active');};
