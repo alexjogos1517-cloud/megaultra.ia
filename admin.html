@@ -1,67 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - CineMorph AI</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Painel Admin - Separado</title>
 <script src="modules-config.js"></script>
-<script src="menu-fixo.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<style>::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:9px}</style>
+<script src="https://cdn.tailwindcss.com"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-[#080A0F] text-slate-100 flex h-screen overflow-hidden">
-<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col"><div class="p-5 border-b border-slate-900 flex items-center gap-3"><div class="w-10 h-10 bg-[#7C3AED] rounded-xl flex items-center justify-center font-black text-white">CM</div><div><h1 class="text-[13px] font-extrabold text-white uppercase">CINEMORPH AI</h1><p class="text-[10px] text-violet-400 font-bold">ADMIN v16</p></div></div><div class="p-3 border-b border-slate-900/50"><a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 text-slate-400 text-[12px]"><i class="fa-solid fa-house w-4"></i> Início</a></div><nav id="dynamicMenu" class="flex-1 overflow-y-auto px-3 py-4"></nav><div id="fixedMenuSlot" class="p-3 border-t border-slate-900"></div></aside>
-<main class="flex-1 overflow-y-auto p-6 md:p-8">
-  <div class="max-w-5xl mx-auto space-y-6">
-    <div class="flex items-center justify-between"><h2 class="text-[22px] font-black text-white">Gerenciar Agentes - TEMPLATE v16</h2><div class="flex gap-2"><button onclick="exportar()" class="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-[12px]">Exportar JSON</button><button onclick="salvarTudo()" class="px-5 py-2 bg-violet-600 rounded-xl text-[12px] font-bold text-white">Salvar no Navegador</button></div></div>
-
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-4 gap-3">
-      <input id="newTitle" placeholder="Título" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px] text-white">
-      <input id="newFile" placeholder="arquivo.html" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px] text-white">
-      <select id="newCat" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px] text-white"><option>VÍDEOS & CLONAGEM</option><option>ESTRATEGIAS</option><option>CONTEÚDO</option><option>OUTROS</option></select>
-      <button onclick="adicionar()" class="bg-white text-black rounded-xl font-bold text-[12px]">+ Adicionar Agente</button>
-    </div>
-
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-      <div class="p-4 border-b border-slate-800 flex items-center gap-2 text-[11px] text-slate-400"><div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div> Modelo v16: menu limpo, só Início no topo, Suporte/Config fixos no rodapé. Status: active / test / maintenance</div>
-      <div id="listaAgentes" class="divide-y divide-slate-800"></div>
-    </div>
-
-    <div class="bg-black border border-slate-900 rounded-2xl p-4">
-      <p class="text-[11px] font-bold uppercase text-slate-500 mb-2">Log / Preview modules-config.js</p>
-      <pre id="previewJson" class="text-[11px] text-slate-400 whitespace-pre-wrap max-h-64 overflow-y-auto"></pre>
-    </div>
-  </div>
-</main>
+<body class="bg-[#080A0F] text-white min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col p-4"><div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center font-black">CM</div><div><h1 class="font-black text-[13px] uppercase">Admin - Separado</h1><p class="text-[10px] text-emerald-400">Painel isolado</p></div></div><nav class="space-y-1 text-[12px]"><a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 text-slate-400"><i class="fa-solid fa-house w-4"></i> Ir pro Site <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-[10px]"></i></a><p class="text-[10px] text-slate-600 px-3 mt-4">Painel separado. Site não tem link pra cá. Acesse só por /admin.html</p></nav></aside>
+<main class="flex-1 overflow-y-auto p-6"><div class="max-w-6xl mx-auto space-y-6"><h2 class="text-[20px] font-black">Gerenciar Agentes - FIX2</h2><div class="bg-slate-900 border border-slate-800 rounded-2xl p-5"><div class="grid grid-cols-2 gap-3"><input id="agId" placeholder="id ex: meu-agente" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px]"><input id="agTitle" placeholder="Título" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px]"><input id="agFile" placeholder="Arquivo ex: meu-agente.html" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px]"><input id="agCategory" placeholder="Categoria" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px]"><input id="agIcon" placeholder="fa-robot" value="fa-robot" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px]"><select id="agStatus" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px]"><option value="active">Ativo - aparece no menu</option><option value="test">Teste - escondido</option><option value="maintenance">Manutenção - só no centro</option></select><label class="flex items-center gap-2 text-[12px] text-slate-400"><input type="checkbox" id="agDestaque"> Destaque</label><button onclick="addAgente()" class="bg-violet-600 rounded-xl py-2.5 font-bold text-[12px]">Salvar</button></div></div><div class="bg-slate-900 border border-slate-800 rounded-2xl p-5"><div class="flex justify-between mb-4"><h3 class="font-bold text-[12px] uppercase">Agentes (<span id="totalAg">0</span>)</h3><div class="flex gap-2"><button onclick="exportarJS()" class="px-3 py-1.5 bg-black border border-slate-800 rounded-lg text-[10px]">Exportar modules-config.js</button><button onclick="salvarNoGitHub()" class="px-4 py-1.5 bg-emerald-600 rounded-lg text-[11px] font-bold">Salvar no GitHub</button></div></div><div id="listaAg" class="space-y-2"></div></div><div class="bg-[#0F1219] border border-violet-900/30 rounded-2xl p-5"><div class="grid grid-cols-4 gap-2"><input id="ghOwner" value="alexjogos1517-cloud" class="bg-black border border-slate-800 rounded-lg px-2 py-2 text-[11px]"><input id="ghRepo" value="megaultra.ia" class="bg-black border border-slate-800 rounded-lg px-2 py-2 text-[11px]"><input id="ghBranch" value="main" class="bg-black border border-slate-800 rounded-lg px-2 py-2 text-[11px]"><input id="ghToken" type="password" placeholder="ghp_" class="bg-black border border-slate-800 rounded-lg px-2 py-2 text-[11px]"></div><div class="flex gap-2 mt-3"><button onclick="salvarGHConfig()" class="px-4 py-2 bg-violet-600 rounded-lg text-[11px] font-bold">Salvar</button><span id="ghStatus" class="text-[10px] text-slate-500 ml-auto">Desconectado</span></div></div><pre id="log" class="bg-black border border-slate-800 rounded-xl p-3 text-[11px] text-slate-500">Painel separado carregado.</pre></div></main>
+</div>
 <script>
-let agentes = [];
-function carregar(){
-  try{ agentes = JSON.parse(localStorage.getItem('cm_agentes_custom')||'null') || JSON.parse(JSON.stringify(BASE_AGENTS)); }
-  catch(e){ agentes = JSON.parse(JSON.stringify(BASE_AGENTS)); }
-  if(!agentes || agentes.length===0) agentes = JSON.parse(JSON.stringify(BASE_AGENTS));
-}
-function render(){
-  const list = document.getElementById('listaAgentes');
-  list.innerHTML = agentes.map((a,i)=>{
-    return '<div class="p-4 flex items-center gap-4 hover:bg-slate-800/30"><div class="w-9 h-9 rounded-xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center shrink-0"><i class="fa-solid '+a.icon+' text-violet-300 text-[12px]"></i></div><div class="flex-1 min-w-0"><p class="text-[13px] font-bold text-white truncate">'+a.title+' <span class="text-[10px] text-slate-500 font-normal">('+a.file+')</span></p><p class="text-[10px] text-slate-500 uppercase">'+a.category+' • '+a.id+'</p></div><select onchange="setStatus('+i+',this.value)" class="bg-black border border-slate-800 rounded-lg px-2 py-1.5 text-[11px] text-white"><option value="active" '+(a.status==='active'?'selected':'')+'>active</option><option value="test" '+(a.status==='test'?'selected':'')+'>test</option><option value="maintenance" '+(a.status==='maintenance'?'selected':'')+'>maintenance</option></select><label class="flex items-center gap-1.5 text-[11px] text-slate-400"><input type="checkbox" '+(a.destaque?'checked':'')+' onchange="setDestaque('+i+',this.checked)"> destaque</label><button onclick="remover('+i+')" class="w-8 h-8 rounded-lg bg-black border border-slate-800 text-slate-500 hover:text-red-400"><i class="fa-solid fa-trash"></i></button></div>';
-  }).join('');
-  document.getElementById('previewJson').textContent = JSON.stringify(agentes, null, 2);
-}
-function setStatus(i,v){ agentes[i].status=v; render(); }
-function setDestaque(i,v){ agentes[i].destaque=v; render(); }
-function remover(i){ if(confirm('Remover '+agentes[i].title+'?')){ agentes.splice(i,1); render(); } }
-function adicionar(){
-  const title = document.getElementById('newTitle').value.trim();
-  const file = document.getElementById('newFile').value.trim();
-  const cat = document.getElementById('newCat').value;
-  if(!title||!file){ alert('Preencha título e arquivo'); return; }
-  const id = title.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-  agentes.push({ id, title, file, category: cat, status:'active', icon:'fa-wand-magic-sparkles', destaque:false });
-  document.getElementById('newTitle').value=''; document.getElementById('newFile').value=''; render();
-}
-function salvarTudo(){ localStorage.setItem('cm_agentes_custom', JSON.stringify(agentes)); alert('Salvo! Atualize o index para ver.'); if(window.CMMenu) CMMenu.render(); }
-function exportar(){ const blob = new Blob([JSON.stringify(agentes,null,2)], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='modules-config-custom.json'; a.click(); URL.revokeObjectURL(url); }
-document.addEventListener('DOMContentLoaded', ()=>{ carregar(); render(); });
+let agentes=[]; let gh=JSON.parse(localStorage.getItem('cm_gh_config')||'null')||{owner:'alexjogos1517-cloud',repo:'megaultra.ia',branch:'main',token:''};
+function init(){try{const c=JSON.parse(localStorage.getItem('cm_agentes_custom')||'null'); if(c&&c.length>0) agentes=c; else agentes=getModulesState();}catch(e){agentes=getModulesState();} document.getElementById('ghOwner').value=gh.owner; document.getElementById('ghRepo').value=gh.repo; document.getElementById('ghBranch').value=gh.branch; document.getElementById('ghToken').value=gh.token; if(gh.token) document.getElementById('ghStatus').innerText='CONECTADO'; renderAgentes();}
+function renderAgentes(){document.getElementById('totalAg').innerText=agentes.length; document.getElementById('listaAg').innerHTML=agentes.map((a,i)=>`<div class="flex items-center justify-between bg-black border border-slate-800 rounded-xl p-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg ${a.status==='active'?'bg-emerald-950 border border-emerald-800 text-emerald-300':a.status==='maintenance'?'bg-amber-950 border border-amber-900 text-amber-300':'bg-slate-800 text-slate-400'} flex items-center justify-center"><i class="fa-solid ${a.icon} text-[12px]"></i></div><div><p class="text-[12px] font-bold text-white">${a.title}</p><p class="text-[10px] text-slate-500">${a.id} • ${a.file} • ${a.status}</p></div></div><div class="flex gap-1"><button onclick="editarAgente(${i})" class="w-8 h-8 bg-slate-800 rounded-lg text-[11px]"><i class="fa-solid fa-pen"></i></button><button onclick="removerAgente(${i})" class="w-8 h-8 bg-red-950 border border-red-900 rounded-lg text-red-300 text-[11px]"><i class="fa-solid fa-trash"></i></button></div></div>`).join('');}
+function addAgente(){const id=document.getElementById('agId').value.trim(); const title=document.getElementById('agTitle').value.trim(); const file=document.getElementById('agFile').value.trim(); const category=document.getElementById('agCategory').value.trim()||'GERAL'; const icon=document.getElementById('agIcon').value.trim()||'fa-robot'; const status=document.getElementById('agStatus').value; const destaque=document.getElementById('agDestaque').checked; if(!id||!title||!file){alert('id, titulo e arquivo');return;} const obj={id,title,file,category,status,icon,destaque}; const ex=agentes.findIndex(a=>a.id===id); if(ex>=0) agentes[ex]=obj; else agentes.push(obj); localStorage.setItem('cm_agentes_custom',JSON.stringify(agentes)); renderAgentes();}
+function editarAgente(i){const a=agentes[i]; document.getElementById('agId').value=a.id; document.getElementById('agTitle').value=a.title; document.getElementById('agFile').value=a.file; document.getElementById('agCategory').value=a.category; document.getElementById('agIcon').value=a.icon; document.getElementById('agStatus').value=a.status; document.getElementById('agDestaque').checked=a.destaque;}
+function removerAgente(i){if(!confirm('Remover?')) return; agentes.splice(i,1); localStorage.setItem('cm_agentes_custom',JSON.stringify(agentes)); renderAgentes();}
+function exportarJS(){const js=`window.BASE_AGENTS = ${JSON.stringify(agentes,null,2)};\n\nwindow.getModulesState = function(){ try{ const c=JSON.parse(localStorage.getItem('cm_agentes_custom')||'null'); if(c&&c.length>0) return c; }catch(e){} return window.BASE_AGENTS; };\nwindow.getActiveAgents = function(){ return window.getModulesState().filter(a=>a.status==='active'); };\nwindow.getMaintenanceAgents = function(){ return window.getModulesState().filter(a=>a.status==='maintenance'); };\nwindow.getDestaques = function(){ return window.getModulesState().filter(a=>a.destaque && a.status==='active'); };`; const b=new Blob([js],{type:'text/javascript'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='modules-config.js'; a.click();}
+async function salvarGHConfig(){gh={owner:document.getElementById('ghOwner').value.trim(),repo:document.getElementById('ghRepo').value.trim(),branch:document.getElementById('ghBranch').value.trim(),token:document.getElementById('ghToken').value.trim()}; localStorage.setItem('cm_gh_config',JSON.stringify(gh)); document.getElementById('ghStatus').innerText='CONECTADO';}
+async function getSha(p){try{const r=await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${p}?ref=${gh.branch}`,{headers:{Authorization:`token ${gh.token}`}}); if(r.status===404) return null; const d=await r.json(); return d.sha;}catch{return null;}}
+async function salvarNoGitHub(){if(!gh.token){alert('Token GitHub');return;} try{const js=`window.BASE_AGENTS = ${JSON.stringify(agentes,null,2)};\n\nwindow.getModulesState = function(){ try{ const c=JSON.parse(localStorage.getItem('cm_agentes_custom')||'null'); if(c&&c.length>0) return c; }catch(e){} return window.BASE_AGENTS; };\nwindow.getActiveAgents = function(){ return window.getModulesState().filter(a=>a.status==='active'); };\nwindow.getMaintenanceAgents = function(){ return window.getModulesState().filter(a=>a.status==='maintenance'); };\nwindow.getDestaques = function(){ return window.getModulesState().filter(a=>a.destaque && a.status==='active'); };`; const content=btoa(unescape(encodeURIComponent(js))); const path='modules-config.js'; const sha=await getSha(path); const body={message:`Atualiza agentes - ${agentes.length}`,content,branch:gh.branch}; if(sha) body.sha=sha; const res=await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${path}`,{method:'PUT',headers:{Authorization:`token ${gh.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)}); const data=await res.json(); if(!res.ok) throw new Error(data.message); alert('✅ Salvo!');}catch(e){alert(e.message);}}
+init();
 </script>
 </body>
 </html>
