@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineMorph AI - Central de Agentes</title>
+<script src="modules-config.js"></script>
+<script src="menu-fixo.js"></script>
+<script src="auth-guard.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:9px}.card-hover:hover{transform:translateY(-2px);border-color:#7c3aed55}</style>
+</head>
+<body class="bg-[#080A0F] text-slate-100 flex h-screen overflow-hidden font-sans">
+<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col shrink-0">
+  <div class="p-5 border-b border-slate-900 flex items-center gap-3">
+    <div class="w-10 h-10 bg-[#7C3AED] rounded-xl flex items-center justify-center font-black text-white text-sm">CM</div>
+    <div><h1 class="text-[13px] font-extrabold text-white uppercase tracking-widest">CINEMORPH AI</h1><p class="text-[11px] text-slate-500">Central de Agentes</p></div>
+  </div>
+  <div class="p-3 border-b border-slate-900/50 space-y-2">
+    <a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-violet-600/20 border border-violet-600/30 text-violet-200 text-[12px] font-bold"><i class="fa-solid fa-house w-4"></i> Início</a>
+    <div class="relative"><input id="searchMenu" placeholder="Buscar agente..." class="w-full bg-black border border-slate-800 rounded-lg px-3 py-2 text-[12px] text-white pl-8 outline-none focus:border-violet-600"><i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 text-[11px]"></i></div>
+    <div id="userInfo" class="px-3 py-2 text-[11px] text-slate-500 bg-black/50 rounded-lg border border-slate-900/50">Carregando...</div>
+  </div>
+  <nav id="dynamicMenu" class="flex-1 overflow-y-auto px-3 py-4 space-y-6 text-xs text-slate-400"><p class="text-[11px] text-slate-600 px-3">Carregando agentes...</p></nav>
+  <div id="fixedMenuSlot" class="p-3 border-t border-slate-900"></div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-[#080A0F] p-6 md:p-8">
+  <div class="max-w-6xl mx-auto space-y-8">
+    <div class="flex items-center justify-between">
+      <div><h2 class="text-[26px] font-black text-white">Central de Agentes</h2><p class="text-[13px] text-slate-400 mt-1">Ativos, manutenção e destaques</p></div>
+      <div class="flex gap-2"><span class="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-full text-[11px] text-slate-400"><span id="totalAtivos">0</span> ativos</span><span class="px-3 py-1.5 bg-amber-950/30 border border-amber-900/30 rounded-full text-[11px] text-amber-300"><span id="totalManut">0</span> manutenção</span></div>
+    </div>
+    <div id="areaDestaques" class="hidden"><div class="flex items-center gap-2 mb-3"><i class="fa-solid fa-star text-amber-400"></i><h3 class="text-[12px] font-black uppercase text-white">Destaques</h3></div><div id="gridDestaques" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div></div>
+    <div><div class="flex items-center gap-2 mb-3"><div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div><h3 class="text-[12px] font-black uppercase text-white">Agentes Ativos</h3></div><div id="gridAtivos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
+    <div id="areaManut" class="hidden"><div class="flex items-center gap-2 mb-3"><div class="w-2 h-2 bg-amber-400 rounded-full"></div><h3 class="text-[12px] font-black uppercase text-amber-300">Em Manutenção</h3></div><div id="gridManut" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
+  </div>
+</main>
+<script>
+function renderHome(){
+  const todos = getModulesState();
+  const ativos = todos.filter(a=>a.status==='active');
+  const manut = todos.filter(a=>a.status==='maintenance');
+  const destaques = todos.filter(a=>a.destaque && a.status==='active');
+  document.getElementById('totalAtivos').innerText=ativos.length;
+  document.getElementById('totalManut').innerText=manut.length;
+  document.getElementById('gridAtivos').innerHTML = ativos.map(a=>`<a href="${a.file}" class="card-hover bg-slate-900 border border-slate-800 rounded-2xl p-5 block"><div class="flex justify-between"><div class="w-11 h-11 rounded-xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center"><i class="fa-solid ${a.icon} text-violet-400"></i></div><span class="text-[9px] px-2 py-1 rounded-full bg-black border border-slate-800 text-slate-500 uppercase">${a.category}</span></div><h3 class="mt-4 font-bold text-white text-[14px]">${a.title}</h3></a>`).join('');
+  if(destaques.length>0){document.getElementById('areaDestaques').classList.remove('hidden');document.getElementById('gridDestaques').innerHTML=destaques.map(a=>`<a href="${a.file}" class="bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl p-5 block text-white"><p class="text-[10px] font-bold uppercase opacity-70">Destaque</p><h3 class="mt-2 font-black text-[16px]">${a.title}</h3></a>`).join('');}
+  if(manut.length>0){document.getElementById('areaManut').classList.remove('hidden');document.getElementById('gridManut').innerHTML=manut.map(a=>`<div class="bg-amber-950/10 border border-amber-900/30 rounded-2xl p-5 opacity-60"><h3 class="font-bold text-white text-[13px]">${a.title}</h3><p class="text-[10px] text-amber-300/60 uppercase">Em manutenção</p></div>`).join('');}
+}
+document.addEventListener('DOMContentLoaded', ()=>{ setTimeout(renderHome, 400); });
+</script>
+</body>
+</html>
