@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurações - CineMorph AI</title>
+<script src="modules-config.js"></script><script src="menu-fixo.js"></script>
+<script src="https://cdn.tailwindcss.com"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-[#080A0F] text-slate-100 flex h-screen overflow-hidden">
+<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col"><div class="p-5 border-b border-slate-900 flex items-center gap-3"><div class="w-10 h-10 bg-[#7C3AED] rounded-xl flex items-center justify-center font-black">CM</div><div><h1 class="text-[13px] font-extrabold text-white uppercase">CINEMORPH AI</h1></div></div><nav id="dynamicMenu" class="flex-1 overflow-y-auto px-3 py-4"></nav><div id="fixedMenuSlot" class="p-3 border-t border-slate-900"></div></aside>
+<main class="flex-1 overflow-y-auto p-8"><div class="max-w-2xl mx-auto space-y-6"><h2 class="text-2xl font-black text-white">Configurações</h2><p class="text-[13px] text-slate-400">Apenas chave Gemini API</p><div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4"><label class="text-[11px] font-bold uppercase text-white">Chave API Gemini</label><input id="geminiKey" type="password" placeholder="AIzaSy..." class="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-[13px] text-white"><div class="flex gap-2"><button onclick="salvarKey()" class="flex-1 py-3 bg-violet-600 text-white rounded-xl font-bold">Salvar Chave</button><button onclick="testarKey()" class="px-5 py-3 bg-black border border-slate-800 text-slate-300 rounded-xl">Testar</button></div><pre id="logKey" class="bg-black border border-slate-800 rounded-xl p-3 text-[11px] text-slate-500 hidden"></pre></div></div></main>
+<script>
+function salvarKey(){ const k=document.getElementById('geminiKey').value.trim(); if(!k){alert('Cole a chave');return;} localStorage.setItem('cm_gemini_key',k); document.getElementById('logKey').classList.remove('hidden'); document.getElementById('logKey').textContent='✅ Chave salva!'; }
+async function testarKey(){ const key=document.getElementById('geminiKey').value.trim()||localStorage.getItem('cm_gemini_key'); const log=document.getElementById('logKey'); log.classList.remove('hidden'); log.textContent='Testando...'; try{ const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`); const d=await r.json(); if(!r.ok) throw new Error(d.error?.message); log.textContent='✅ Chave válida! Modelos: '+(d.models?.length||0); }catch(e){ log.textContent='❌ '+e.message; } }
+document.addEventListener('DOMContentLoaded', ()=>{ const k=localStorage.getItem('cm_gemini_key'); if(k) document.getElementById('geminiKey').value=k; });
+</script>
+</body>
+</html>

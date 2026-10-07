@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - CineMorph AI</title>
+<script src="modules-config.js"></script>
+<script src="menu-fixo.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:9px}</style>
+</head>
+<body class="bg-[#080A0F] text-slate-100 flex h-screen overflow-hidden">
+<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col"><div class="p-5 border-b border-slate-900 flex items-center gap-3"><div class="w-10 h-10 bg-[#7C3AED] rounded-xl flex items-center justify-center font-black text-white">CM</div><div><h1 class="text-[13px] font-extrabold text-white uppercase">CINEMORPH AI</h1><p class="text-[10px] text-violet-400 font-bold">ADMIN v16</p></div></div><div class="p-3 border-b border-slate-900/50"><a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900 text-slate-400 text-[12px]"><i class="fa-solid fa-house w-4"></i> Início</a></div><nav id="dynamicMenu" class="flex-1 overflow-y-auto px-3 py-4"></nav><div id="fixedMenuSlot" class="p-3 border-t border-slate-900"></div></aside>
+<main class="flex-1 overflow-y-auto p-6 md:p-8">
+  <div class="max-w-5xl mx-auto space-y-6">
+    <div class="flex items-center justify-between"><h2 class="text-[22px] font-black text-white">Gerenciar Agentes - TEMPLATE v16</h2><div class="flex gap-2"><button onclick="exportar()" class="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-[12px]">Exportar JSON</button><button onclick="salvarTudo()" class="px-5 py-2 bg-violet-600 rounded-xl text-[12px] font-bold text-white">Salvar no Navegador</button></div></div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-4 gap-3">
+      <input id="newTitle" placeholder="Título" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px] text-white">
+      <input id="newFile" placeholder="arquivo.html" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px] text-white">
+      <select id="newCat" class="bg-black border border-slate-800 rounded-xl px-3 py-2.5 text-[12px] text-white"><option>VÍDEOS & CLONAGEM</option><option>ESTRATEGIAS</option><option>CONTEÚDO</option><option>OUTROS</option></select>
+      <button onclick="adicionar()" class="bg-white text-black rounded-xl font-bold text-[12px]">+ Adicionar Agente</button>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center gap-2 text-[11px] text-slate-400"><div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div> Modelo v16: menu limpo, só Início no topo, Suporte/Config fixos no rodapé. Status: active / test / maintenance</div>
+      <div id="listaAgentes" class="divide-y divide-slate-800"></div>
+    </div>
+
+    <div class="bg-black border border-slate-900 rounded-2xl p-4">
+      <p class="text-[11px] font-bold uppercase text-slate-500 mb-2">Log / Preview modules-config.js</p>
+      <pre id="previewJson" class="text-[11px] text-slate-400 whitespace-pre-wrap max-h-64 overflow-y-auto"></pre>
+    </div>
+  </div>
+</main>
+<script>
+let agentes = [];
+function carregar(){
+  try{ agentes = JSON.parse(localStorage.getItem('cm_agentes_custom')||'null') || JSON.parse(JSON.stringify(BASE_AGENTS)); }
+  catch(e){ agentes = JSON.parse(JSON.stringify(BASE_AGENTS)); }
+  if(!agentes || agentes.length===0) agentes = JSON.parse(JSON.stringify(BASE_AGENTS));
+}
+function render(){
+  const list = document.getElementById('listaAgentes');
+  list.innerHTML = agentes.map((a,i)=>{
+    return '<div class="p-4 flex items-center gap-4 hover:bg-slate-800/30"><div class="w-9 h-9 rounded-xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center shrink-0"><i class="fa-solid '+a.icon+' text-violet-300 text-[12px]"></i></div><div class="flex-1 min-w-0"><p class="text-[13px] font-bold text-white truncate">'+a.title+' <span class="text-[10px] text-slate-500 font-normal">('+a.file+')</span></p><p class="text-[10px] text-slate-500 uppercase">'+a.category+' • '+a.id+'</p></div><select onchange="setStatus('+i+',this.value)" class="bg-black border border-slate-800 rounded-lg px-2 py-1.5 text-[11px] text-white"><option value="active" '+(a.status==='active'?'selected':'')+'>active</option><option value="test" '+(a.status==='test'?'selected':'')+'>test</option><option value="maintenance" '+(a.status==='maintenance'?'selected':'')+'>maintenance</option></select><label class="flex items-center gap-1.5 text-[11px] text-slate-400"><input type="checkbox" '+(a.destaque?'checked':'')+' onchange="setDestaque('+i+',this.checked)"> destaque</label><button onclick="remover('+i+')" class="w-8 h-8 rounded-lg bg-black border border-slate-800 text-slate-500 hover:text-red-400"><i class="fa-solid fa-trash"></i></button></div>';
+  }).join('');
+  document.getElementById('previewJson').textContent = JSON.stringify(agentes, null, 2);
+}
+function setStatus(i,v){ agentes[i].status=v; render(); }
+function setDestaque(i,v){ agentes[i].destaque=v; render(); }
+function remover(i){ if(confirm('Remover '+agentes[i].title+'?')){ agentes.splice(i,1); render(); } }
+function adicionar(){
+  const title = document.getElementById('newTitle').value.trim();
+  const file = document.getElementById('newFile').value.trim();
+  const cat = document.getElementById('newCat').value;
+  if(!title||!file){ alert('Preencha título e arquivo'); return; }
+  const id = title.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  agentes.push({ id, title, file, category: cat, status:'active', icon:'fa-wand-magic-sparkles', destaque:false });
+  document.getElementById('newTitle').value=''; document.getElementById('newFile').value=''; render();
+}
+function salvarTudo(){ localStorage.setItem('cm_agentes_custom', JSON.stringify(agentes)); alert('Salvo! Atualize o index para ver.'); if(window.CMMenu) CMMenu.render(); }
+function exportar(){ const blob = new Blob([JSON.stringify(agentes,null,2)], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='modules-config-custom.json'; a.click(); URL.revokeObjectURL(url); }
+document.addEventListener('DOMContentLoaded', ()=>{ carregar(); render(); });
+</script>
+</body>
+</html>
