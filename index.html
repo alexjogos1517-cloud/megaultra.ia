@@ -1,42 +1,753 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CineMorph AI - Central de Agentes</title>
-<script src="modules-config.js"></script>
-<script src="menu-fixo.js"></script>
-<script src="auth-guard.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<style>::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:9px}.card-hover:hover{transform:translateY(-2px);border-color:#7c3aed55}</style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Plataforma de agentes de inteligência artificial."
+    >
+
+    <title>Plataforma de Agentes IA</title>
+
+    <!--
+        CSS será conectado nas próximas etapas.
+    -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/site.css">
 </head>
-<body class="bg-[#080A0F] text-slate-100 flex h-screen overflow-hidden font-sans">
-<aside class="w-64 bg-[#05070B] border-r border-slate-900 flex flex-col shrink-0">
-  <div class="p-5 border-b border-slate-900 flex items-center gap-3"><div class="w-10 h-10 bg-[#7C3AED] rounded-xl flex items-center justify-center font-black text-white text-sm">CM</div><div><h1 class="text-[13px] font-extrabold text-white uppercase tracking-widest">CINEMORPH AI</h1><p class="text-[11px] text-slate-500">Central de Agentes</p></div></div>
-  <div class="p-3 border-b border-slate-900/50 space-y-2"><a href="index.html" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-violet-600/20 border border-violet-600/30 text-violet-200 text-[12px] font-bold"><i class="fa-solid fa-house w-4"></i> Início</a><div class="relative"><input id="searchMenu" placeholder="Buscar agente..." class="w-full bg-black border border-slate-800 rounded-lg px-3 py-2 text-[12px] text-white pl-8"><i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 text-[11px]"></i></div><div id="userInfo" class="px-3 py-2 text-[11px] text-slate-500 bg-black/50 rounded-lg border border-slate-900/50"></div></div>
-  <nav id="dynamicMenu" class="flex-1 overflow-y-auto px-3 py-4 space-y-6 text-xs text-slate-400"><p class="text-[11px] text-slate-600 px-3">Carregando...</p></nav>
-  <div id="fixedMenuSlot" class="p-3 border-t border-slate-900"></div>
-</aside>
-<main class="flex-1 overflow-y-auto bg-[#080A0F] p-6 md:p-8">
-  <div class="max-w-6xl mx-auto space-y-8">
-    <div><h2 class="text-[26px] font-black text-white">Central de Agentes</h2><p class="text-[13px] text-slate-400 mt-1">Seus agentes ativos e em manutenção</p></div>
-    <div id="areaDestaques" class="hidden"><div class="flex items-center gap-2 mb-3"><i class="fa-solid fa-star text-amber-400"></i><h3 class="text-[12px] font-black uppercase text-white">Destaques</h3></div><div id="gridDestaques" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div></div>
-    <div><div class="flex items-center gap-2 mb-3"><div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div><h3 class="text-[12px] font-black uppercase text-white">Agentes Ativos</h3></div><div id="gridAtivos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
-    <div id="areaManut" class="hidden"><div class="flex items-center gap-2 mb-3"><div class="w-2 h-2 bg-amber-400 rounded-full"></div><h3 class="text-[12px] font-black uppercase text-amber-300">Em Manutenção</h3></div><div id="gridManut" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
-  </div>
-</main>
-<script>
-function renderHome(){
-  const todos=getModulesState();
-  const ativos=todos.filter(a=>a.status==='active');
-  const manut=todos.filter(a=>a.status==='maintenance');
-  const destaques=todos.filter(a=>a.destaque && a.status==='active');
-  document.getElementById('gridAtivos').innerHTML=ativos.map(a=>`<a href="${a.file}" class="card-hover bg-slate-900 border border-slate-800 rounded-2xl p-5 block"><div class="flex justify-between"><div class="w-11 h-11 rounded-xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center"><i class="fa-solid ${a.icon} text-violet-400"></i></div><span class="text-[9px] px-2 py-1 rounded-full bg-black border border-slate-800 text-slate-500 uppercase">${a.category}</span></div><h3 class="mt-4 font-bold text-white text-[14px]">${a.title}</h3></a>`).join('') || '<p class="text-[12px] text-slate-600 col-span-3">Nenhum agente ativo. Ative em /admin.html</p>';
-  if(destaques.length>0){document.getElementById('areaDestaques').classList.remove('hidden');document.getElementById('gridDestaques').innerHTML=destaques.map(a=>`<a href="${a.file}" class="bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl p-5 block text-white"><p class="text-[10px] font-bold uppercase opacity-70">Destaque</p><h3 class="mt-2 font-black text-[16px]">${a.title}</h3></a>`).join('');}
-  if(manut.length>0){document.getElementById('areaManut').classList.remove('hidden');document.getElementById('gridManut').innerHTML=manut.map(a=>`<div class="bg-amber-950/10 border border-amber-900/30 rounded-2xl p-5 opacity-60"><h3 class="font-bold text-white text-[13px]">${a.title}</h3><p class="text-[10px] text-amber-300/60 uppercase">Em manutenção</p></div>`).join('');}
-}
-document.addEventListener('DOMContentLoaded', ()=>{ setTimeout(renderHome,400); });
-</script>
+
+<body>
+
+    <!-- =====================================================
+         CABEÇALHO
+    ====================================================== -->
+
+    <header class="site-header">
+
+        <div class="container header-container">
+
+            <!-- LOGO -->
+            <a href="index.html" class="logo">
+                <span class="logo-icon">✦</span>
+                <span class="logo-text">AGENTES IA</span>
+            </a>
+
+            <!-- MENU PRINCIPAL -->
+            <nav class="main-navigation">
+
+                <a href="#inicio">
+                    Início
+                </a>
+
+                <a href="#agentes">
+                    Agentes
+                </a>
+
+                <a href="#como-funciona">
+                    Como funciona
+                </a>
+
+                <a href="#planos">
+                    Planos
+                </a>
+
+            </nav>
+
+            <!-- AÇÕES -->
+            <div class="header-actions">
+
+                <a
+                    href="login.html"
+                    class="button button-secondary"
+                >
+                    Entrar
+                </a>
+
+                <a
+                    href="cadastro.html"
+                    class="button button-primary"
+                >
+                    Começar agora
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
+        <section
+            id="inicio"
+            class="hero-section"
+        >
+
+            <div class="container hero-container">
+
+                <div class="hero-content">
+
+                    <span class="hero-badge">
+                        INTELIGÊNCIA ARTIFICIAL
+                    </span>
+
+                    <h1>
+                        Transforme suas ideias
+                        em <span>possibilidades com IA.</span>
+                    </h1>
+
+                    <p>
+                        Tenha acesso a agentes de inteligência
+                        artificial especializados para criar,
+                        automatizar e executar diferentes tarefas
+                        em um único lugar.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a
+                            href="cadastro.html"
+                            class="button button-primary button-large"
+                        >
+                            Começar agora
+                        </a>
+
+                        <a
+                            href="#agentes"
+                            class="button button-secondary button-large"
+                        >
+                            Conhecer os agentes
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REPRESENTAÇÃO VISUAL DA PLATAFORMA -->
+
+                <div class="hero-visual">
+
+                    <div class="ai-panel">
+
+                        <div class="ai-panel-header">
+
+                            <div class="window-controls">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                            <span>
+                                AI AGENT
+                            </span>
+
+                        </div>
+
+                        <div class="ai-panel-body">
+
+                            <div class="ai-icon">
+                                ✦
+                            </div>
+
+                            <h3>
+                                Agente pronto para trabalhar
+                            </h3>
+
+                            <p>
+                                Escolha um agente e transforme
+                                sua ideia em uma execução completa.
+                            </p>
+
+                            <div class="ai-status">
+                                <span class="status-dot"></span>
+                                Sistema operacional
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RECURSOS
+        ================================================== -->
+
+        <section class="features-section">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        PLATAFORMA
+                    </span>
+
+                    <h2>
+                        Tudo o que você precisa em um só lugar
+                    </h2>
+
+                    <p>
+                        Uma estrutura preparada para trabalhar
+                        com diferentes agentes de inteligência
+                        artificial.
+                    </p>
+
+                </div>
+
+
+                <div class="features-grid">
+
+                    <article class="feature-card">
+
+                        <div class="feature-icon">
+                            🤖
+                        </div>
+
+                        <h3>
+                            Agentes especializados
+                        </h3>
+
+                        <p>
+                            Utilize agentes desenvolvidos para
+                            diferentes tarefas e necessidades.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <div class="feature-icon">
+                            ⚡
+                        </div>
+
+                        <h3>
+                            Execução rápida
+                        </h3>
+
+                        <p>
+                            Transforme suas solicitações em
+                            resultados através dos agentes.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <div class="feature-icon">
+                            🔐
+                        </div>
+
+                        <h3>
+                            Controle e segurança
+                        </h3>
+
+                        <p>
+                            Cada cliente possui seu próprio
+                            acesso, permissões e configurações.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <div class="feature-icon">
+                            🔑
+                        </div>
+
+                        <h3>
+                            Suas próprias APIs
+                        </h3>
+
+                        <p>
+                            Conecte futuramente suas próprias
+                            chaves de provedores de inteligência
+                            artificial.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             COMO FUNCIONA
+        ================================================== -->
+
+        <section
+            id="como-funciona"
+            class="how-section"
+        >
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        COMO FUNCIONA
+                    </span>
+
+                    <h2>
+                        Simples de usar
+                    </h2>
+
+                    <p>
+                        O sistema foi pensado para que você
+                        não precise lidar com toda a complexidade
+                        por trás da inteligência artificial.
+                    </p>
+
+                </div>
+
+
+                <div class="steps-grid">
+
+                    <article class="step-card">
+
+                        <span class="step-number">
+                            01
+                        </span>
+
+                        <h3>
+                            Escolha
+                        </h3>
+
+                        <p>
+                            Escolha o agente que deseja utilizar.
+                        </p>
+
+                    </article>
+
+
+                    <article class="step-card">
+
+                        <span class="step-number">
+                            02
+                        </span>
+
+                        <h3>
+                            Informe
+                        </h3>
+
+                        <p>
+                            Explique o que você deseja criar
+                            ou executar.
+                        </p>
+
+                    </article>
+
+
+                    <article class="step-card">
+
+                        <span class="step-number">
+                            03
+                        </span>
+
+                        <h3>
+                            Execute
+                        </h3>
+
+                        <p>
+                            O agente processa sua solicitação
+                            e produz o resultado.
+                        </p>
+
+                    </article>
+
+
+                    <article class="step-card">
+
+                        <span class="step-number">
+                            04
+                        </span>
+
+                        <h3>
+                            Continue
+                        </h3>
+
+                        <p>
+                            Consulte o histórico e continue
+                            seus projetos quando quiser.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             AGENTES
+        ================================================== -->
+
+        <section
+            id="agentes"
+            class="agents-section"
+        >
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        AGENTES
+                    </span>
+
+                    <h2>
+                        Conheça nossos agentes
+                    </h2>
+
+                    <p>
+                        Uma plataforma preparada para crescer
+                        com novos agentes e novas possibilidades.
+                    </p>
+
+                </div>
+
+
+                <div class="agents-grid">
+
+                    <!-- AGENTE UNIVERSAL -->
+
+                    <article class="agent-card">
+
+                        <div class="agent-card-top">
+
+                            <span class="agent-status">
+                                DISPONÍVEL
+                            </span>
+
+                            <span class="agent-version">
+                                V3.1
+                            </span>
+
+                        </div>
+
+
+                        <div class="agent-icon">
+                            ✦
+                        </div>
+
+
+                        <h3>
+                            Agente Universal
+                        </h3>
+
+
+                        <p>
+                            Criação de prompts, roteiros,
+                            cenas, personagens, continuidade
+                            e projetos completos para IA.
+                        </p>
+
+
+                        <div class="agent-tags">
+
+                            <span>
+                                Prompts
+                            </span>
+
+                            <span>
+                                Vídeos
+                            </span>
+
+                            <span>
+                                IA
+                            </span>
+
+                        </div>
+
+
+                        <a
+                            href="agentes/universal/index.html"
+                            class="button button-primary"
+                        >
+                            Conhecer agente
+                        </a>
+
+                    </article>
+
+
+                    <!-- FUTURO AGENTE -->
+
+                    <article class="agent-card agent-card-disabled">
+
+                        <div class="agent-card-top">
+
+                            <span class="agent-status status-soon">
+                                EM BREVE
+                            </span>
+
+                        </div>
+
+
+                        <div class="agent-icon">
+                            +
+                        </div>
+
+
+                        <h3>
+                            Novo agente
+                        </h3>
+
+
+                        <p>
+                            Novos agentes especializados serão
+                            adicionados à plataforma.
+                        </p>
+
+
+                        <button
+                            type="button"
+                            class="button button-disabled"
+                            disabled
+                        >
+                            Em breve
+                        </button>
+
+                    </article>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PLANOS
+        ================================================== -->
+
+        <section
+            id="planos"
+            class="plans-preview-section"
+        >
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        PLANOS
+                    </span>
+
+                    <h2>
+                        Escolha o acesso ideal para você
+                    </h2>
+
+                    <p>
+                        Os planos serão configurados futuramente
+                        de acordo com os agentes e recursos
+                        disponíveis.
+                    </p>
+
+                </div>
+
+
+                <div class="plans-placeholder">
+
+                    <div class="plans-placeholder-icon">
+                        ◇
+                    </div>
+
+                    <h3>
+                        Planos em preparação
+                    </h3>
+
+                    <p>
+                        A estrutura comercial da plataforma
+                        será adicionada na próxima etapa.
+                    </p>
+
+                    <a
+                        href="cadastro.html"
+                        class="button button-primary"
+                    >
+                        Criar minha conta
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CTA FINAL
+        ================================================== -->
+
+        <section class="cta-section">
+
+            <div class="container">
+
+                <div class="cta-box">
+
+                    <span class="section-label">
+                        COMECE AGORA
+                    </span>
+
+                    <h2>
+                        Pronto para começar?
+                    </h2>
+
+                    <p>
+                        Crie sua conta e descubra o que seus
+                        agentes de inteligência artificial
+                        podem fazer.
+                    </p>
+
+                    <a
+                        href="cadastro.html"
+                        class="button button-primary button-large"
+                    >
+                        Criar minha conta
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         RODAPÉ
+    ====================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-container">
+
+            <div class="footer-brand">
+
+                <a
+                    href="index.html"
+                    class="logo"
+                >
+                    <span class="logo-icon">✦</span>
+                    <span class="logo-text">
+                        AGENTES IA
+                    </span>
+                </a>
+
+                <p>
+                    Plataforma de agentes de inteligência
+                    artificial.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <div>
+
+                    <h4>
+                        Plataforma
+                    </h4>
+
+                    <a href="#agentes">
+                        Agentes
+                    </a>
+
+                    <a href="#como-funciona">
+                        Como funciona
+                    </a>
+
+                    <a href="#planos">
+                        Planos
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+                        Conta
+                    </h4>
+
+                    <a href="login.html">
+                        Entrar
+                    </a>
+
+                    <a href="cadastro.html">
+                        Criar conta
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+                        Suporte
+                    </h4>
+
+                    <a href="#">
+                        Central de ajuda
+                    </a>
+
+                    <a href="#">
+                        Contato
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <div class="container">
+
+                <p>
+                    © 2026 Agentes IA. Todos os direitos reservados.
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!--
+        JavaScript será conectado nas próximas etapas.
+    -->
+
 </body>
 </html>
