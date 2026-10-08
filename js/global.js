@@ -1,1320 +1,725 @@
-/* =========================================================
-   AGENTES UNIVERSAL
-   JAVASCRIPT GLOBAL
-   Versão: 1.0
-   Status: Núcleo inicial da plataforma
-   ========================================================= */
+/**
+ * ============================================================
+ * AGENTES UNIVERSAL
+ * JAVASCRIPT GLOBAL — NÚCLEO DA PLATAFORMA
+ * ============================================================
+ *
+ * ARQUIVO:
+ * /js/global.js
+ *
+ * VERSÃO:
+ * 2.0
+ *
+ * FUNÇÃO:
+ * Núcleo global da aplicação.
+ *
+ * IMPORTANTE:
+ * Este arquivo NÃO deve conter:
+ * - senhas reais
+ * - chaves de API
+ * - credenciais
+ * - lógica de banco real
+ * - segredos
+ *
+ * A camada de dados fica em:
+ * /js/database.js
+ *
+ * Futuramente:
+ *
+ * Interface
+ *    ↓
+ * JavaScript
+ *    ↓
+ * Data Layer
+ *    ↓
+ * API / Netlify Functions
+ *    ↓
+ * Banco de dados
+ *
+ * ============================================================
+ */
+
+"use strict";
 
 
-/* =========================================================
-   01. CONFIGURAÇÃO PRINCIPAL
-   ========================================================= */
+/* ============================================================
+   1. CONFIGURAÇÃO PRINCIPAL
+   ============================================================ */
 
-const APP = {
+const APP = Object.freeze({
 
     name: "Agentes Universal",
 
     shortName: "Agentes Universal",
 
-    version: "0.1.0",
+    title: "Agentes Universal — Plataforma de Agentes IA",
 
-    environment: "development",
+    version: "2.0.0",
 
-    mode: "HTML/CSS/JS",
+    environment: "frontend",
 
-    storageKey: "agentes_universal_data",
-
-    initialized: false
-};
-
-
-/* =========================================================
-   02. CONFIGURAÇÃO DA PLATAFORMA
-   ========================================================= */
-
-const PLATFORM_CONFIG = {
-
-    platformName: "Agentes Universal",
-
-    platformTitle:
-        "Agentes Universal — Plataforma de Agentes IA",
-
-    supportEmail:
-        "suporte@agentesuniversal.local",
-
-    subscriptionDays: 30,
-
-    defaultLanguage: "pt-BR",
+    language: "pt-BR",
 
     timezone: "America/Sao_Paulo",
 
-    currency: "BRL"
-};
+    currency: "BRL",
 
+    currencySymbol: "R$",
 
-/* =========================================================
-   03. BANCO DE DADOS TEMPORÁRIO
-   =========================================================
+    subscriptionDays: 30,
 
-   ATENÇÃO:
+    storageMode: "local",
 
-   Esta estrutura simula o banco de dados.
+    apiMode: false,
 
-   Futuramente será substituída por:
+    backendReady: false,
 
-   - Backend
-   - Banco de dados real
-   - API
-   - Sistema de autenticação
-   - Controle de sessão
-   - Segurança real
+    initialized: false
 
-   Não colocar informações sensíveis reais aqui.
-   ========================================================= */
+});
 
-const DEFAULT_DATABASE = {
 
-    /* =====================================================
-       USUÁRIOS
-       ===================================================== */
+/* ============================================================
+   2. CONFIGURAÇÃO DA PLATAFORMA
+   ============================================================ */
 
-    users: [],
+const PLATFORM_CONFIG = Object.freeze({
 
+    platform: {
+        id: "PLT-001",
+        name: "Agentes Universal",
+        status: "active"
+    },
 
-    /* =====================================================
-       CLIENTES
-       ===================================================== */
+    brand: {
+        logo: "✦",
+        name: "AGENTES UNIVERSAL"
+    },
 
-    clients: [
+    routes: {
 
-        {
-            id: "CLI-0001",
+        home: "/index.html",
 
-            name: "Cliente Demonstração",
+        login: "/login.html",
 
-            email: "cliente@demo.local",
+        register: "/cadastro.html",
 
-            whatsapp: "(00) 00000-0000",
+        recovery: "/recuperar-senha.html",
 
-            status: "active",
+        client: "/cliente/dashboard.html",
 
-            createdAt:
-                "2026-10-08T14:30:00",
+        clientAgents: "/cliente/agentes.html",
 
-            token:
-                "demo-token-cli-0001",
+        clientAgent: "/cliente/agente.html",
 
-            subscriptionId:
-                "SUB-0001"
-        }
+        clientSubscription: "/cliente/assinatura.html",
 
-    ],
+        clientProfile: "/cliente/perfil.html",
 
+        clientApis: "/cliente/apis.html",
 
-    /* =====================================================
-       SESSÕES
-       ===================================================== */
+        clientHistory: "/cliente/historico.html",
 
-    sessions: [],
+        admin: "/admin/dashboard.html",
 
+        adminClients: "/admin/clientes.html",
 
-    /* =====================================================
-       TOKENS
-       ===================================================== */
+        adminClient: "/admin/cliente.html",
 
-    clientTokens: [
+        adminAgents: "/admin/agentes.html",
 
-        {
-            id: "TOK-0001",
+        adminSubscriptions: "/admin/assinaturas.html",
 
-            clientId: "CLI-0001",
+        adminPlans: "/admin/planos.html",
 
-            token:
-                "demo-token-cli-0001",
+        adminApis: "/admin/apis.html",
 
-            status: "active",
+        adminLogs: "/admin/logs.html",
 
-            createdAt:
-                "2026-10-08T14:30:00"
-        }
+        adminSettings: "/admin/configuracoes.html",
 
-    ],
+        universalAgent: "/agentes/universal/index.html",
 
+        universalV31:
+            "/agentes/universal/v3.1/index.html"
 
-    /* =====================================================
-       PLANOS
-       ===================================================== */
+    },
 
-    plans: [
+    api: {
 
-        {
-            id: "PLAN-001",
+        enabled: false,
 
-            name: "Plano Inicial",
+        baseUrl: "/.netlify/functions",
 
-            description:
-                "Plano inicial da plataforma.",
+        timeout: 30000
 
-            price: 0,
-
-            durationDays: 30,
-
-            status: "active",
-
-            agentsLimit: 1
-        }
-
-    ],
-
-
-    /* =====================================================
-       ASSINATURAS
-       ===================================================== */
-
-    subscriptions: [
-
-        {
-            id: "SUB-0001",
-
-            clientId: "CLI-0001",
-
-            planId: "PLAN-001",
-
-            startAt:
-                "2026-10-08T14:30:00",
-
-            endAt:
-                "2026-11-07T14:30:00",
-
-            status: "active",
-
-            autoRenew: false
-        }
-
-    ],
-
-
-    /* =====================================================
-       HISTÓRICO DE ASSINATURAS
-       ===================================================== */
-
-    subscriptionHistory: [
-
-        {
-            id: "SUBH-0001",
-
-            subscriptionId: "SUB-0001",
-
-            clientId: "CLI-0001",
-
-            action: "created",
-
-            date:
-                "2026-10-08T14:30:00"
-        }
-
-    ],
-
-
-    /* =====================================================
-       AGENTES
-       ===================================================== */
-
-    agents: [
-
-        {
-            id: "AGT-001",
-
-            name:
-                "Agente Universal de Criação de Prompts",
-
-            version: "V3.1",
-
-            fullName:
-                "Agente Universal de Criação de IA — V3.1",
-
-            description:
-                "Agente universal para criação de ideias, roteiros, prompts, cenas e projetos com inteligência artificial.",
-
-            category:
-                "Criação",
-
-            status: "active",
-
-            path:
-                "agentes/universal/v3.1/index.html"
-        },
-
-
-        {
-            id: "AGT-002",
-
-            name:
-                "Agente Universal de Roteiros",
-
-            version: "V1.0",
-
-            fullName:
-                "Agente Universal de Roteiros — V1.0",
-
-            description:
-                "Agente especializado na criação e estruturação de roteiros.",
-
-            category:
-                "Roteiros",
-
-            status: "active",
-
-            path:
-                "agentes/universal/roteiros/index.html"
-        },
-
-
-        {
-            id: "AGT-003",
-
-            name:
-                "Agente Universal de Conteúdo",
-
-            version: "V1.0",
-
-            fullName:
-                "Agente Universal de Conteúdo — V1.0",
-
-            description:
-                "Agente para criação de conteúdos para diferentes plataformas.",
-
-            category:
-                "Conteúdo",
-
-            status: "maintenance",
-
-            path:
-                "agentes/universal/conteudo/index.html"
-        }
-
-    ],
-
-
-    /* =====================================================
-       VERSÕES DOS AGENTES
-       ===================================================== */
-
-    agentVersions: [
-
-        {
-            id: "AGV-001",
-
-            agentId: "AGT-001",
-
-            version: "V3.1",
-
-            status: "active",
-
-            releaseDate:
-                "2026-10-08"
-        }
-
-    ],
-
-
-    /* =====================================================
-       PERMISSÕES DOS CLIENTES
-       ===================================================== */
-
-    agentPermissions: [
-
-        {
-            id: "PERM-0001",
-
-            clientId: "CLI-0001",
-
-            agentId: "AGT-001",
-
-            allowed: true,
-
-            createdAt:
-                "2026-10-08T14:30:00"
-        },
-
-
-        {
-            id: "PERM-0002",
-
-            clientId: "CLI-0001",
-
-            agentId: "AGT-002",
-
-            allowed: false,
-
-            createdAt:
-                "2026-10-08T14:30:00"
-        },
-
-
-        {
-            id: "PERM-0003",
-
-            clientId: "CLI-0001",
-
-            agentId: "AGT-003",
-
-            allowed: false,
-
-            createdAt:
-                "2026-10-08T14:30:00"
-        }
-
-    ],
-
-
-    /* =====================================================
-       PROVEDORES DE API
-       ===================================================== */
-
-    apiProviders: [
-
-        {
-            id: "API-GEMINI",
-
-            name: "Google Gemini",
-
-            slug: "gemini",
-
-            status: "active"
-        },
-
-
-        {
-            id: "API-OPENAI",
-
-            name: "OpenAI",
-
-            slug: "openai",
-
-            status: "active"
-        }
-
-    ],
-
-
-    /* =====================================================
-       CHAVES DE API DOS CLIENTES
-       ===================================================== */
-
-    clientApiKeys: [],
-
-
-    /* =====================================================
-       EXECUÇÕES
-       ===================================================== */
-
-    executions: [],
-
-
-    /* =====================================================
-       LOGS DE EXECUÇÃO
-       ===================================================== */
-
-    executionLogs: [],
-
-
-    /* =====================================================
-       LOGS DE AUDITORIA
-       ===================================================== */
-
-    auditLogs: [],
-
-
-    /* =====================================================
-       CONFIGURAÇÕES
-       ===================================================== */
-
-    settings: {
-
-        maintenanceMode: false,
-
-        allowRegistration: true,
-
-        allowPasswordRecovery: true,
-
-        defaultSubscriptionDays: 30,
-
-        platformVersion: "0.1.0"
     }
 
-};
+});
 
 
-/* =========================================================
-   04. OBTER BANCO DE DADOS
-   ========================================================= */
+/* ============================================================
+   3. TIPOS E STATUS PADRÃO
+   ============================================================ */
 
-function getDatabase() {
+const STATUS = Object.freeze({
 
-    try {
+    ACTIVE: "active",
 
-        const stored =
-            localStorage.getItem(APP.storageKey);
+    INACTIVE: "inactive",
 
-        if (!stored) {
+    PENDING: "pending",
 
-            const initialData =
-                JSON.parse(
-                    JSON.stringify(DEFAULT_DATABASE)
-                );
+    BLOCKED: "blocked",
 
-            localStorage.setItem(
-                APP.storageKey,
-                JSON.stringify(initialData)
-            );
+    EXPIRED: "expired",
 
-            return initialData;
-        }
+    CANCELLED: "cancelled",
+
+    SUSPENDED: "suspended",
+
+    DRAFT: "draft"
+
+});
 
 
-        return JSON.parse(stored);
+const USER_ROLES = Object.freeze({
 
-    } catch (error) {
+    ADMIN: "admin",
 
-        console.error(
-            "Erro ao carregar banco local:",
-            error
-        );
+    CLIENT: "client"
 
-        return JSON.parse(
-            JSON.stringify(DEFAULT_DATABASE)
-        );
-    }
+});
+
+
+const EXECUTION_STATUS = Object.freeze({
+
+    PENDING: "pending",
+
+    RUNNING: "running",
+
+    COMPLETED: "completed",
+
+    FAILED: "failed",
+
+    CANCELLED: "cancelled"
+
+});
+
+
+/* ============================================================
+   4. UTILIDADES DE ID
+   ============================================================ */
+
+function generateId(prefix = "ID") {
+
+    const timestamp = Date.now();
+
+    const random = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
+
+    return `${prefix}-${timestamp}-${random}`;
 }
 
 
-/* =========================================================
-   05. SALVAR BANCO DE DADOS
-   ========================================================= */
+/* ============================================================
+   5. UTILIDADES DE DATA
+   ============================================================ */
 
-function saveDatabase(database) {
+function now() {
 
-    try {
+    return new Date();
 
-        localStorage.setItem(
-            APP.storageKey,
-            JSON.stringify(database)
-        );
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "Erro ao salvar banco local:",
-            error
-        );
-
-        return false;
-    }
 }
 
 
-/* =========================================================
-   06. RESETAR BANCO
-   ========================================================= */
+function nowISO() {
 
-function resetDatabase() {
+    return new Date().toISOString();
 
-    const confirmation =
-        window.confirm(
-            "Deseja realmente restaurar os dados de demonstração?"
-        );
-
-
-    if (!confirmation) {
-
-        return false;
-    }
-
-
-    const database =
-        JSON.parse(
-            JSON.stringify(DEFAULT_DATABASE)
-        );
-
-
-    saveDatabase(database);
-
-
-    console.log(
-        "Banco de demonstração restaurado."
-    );
-
-
-    window.location.reload();
-
-    return true;
 }
 
 
-/* =========================================================
-   07. OBTER CLIENTE
-   ========================================================= */
-
-function getClientById(clientId) {
-
-    const database =
-        getDatabase();
-
-    return database.clients.find(
-        client => client.id === clientId
-    ) || null;
-}
-
-
-/* =========================================================
-   08. OBTER CLIENTE ATUAL
-   ========================================================= */
-
-function getCurrentClient() {
-
-    const database =
-        getDatabase();
-
-
-    const currentClientId =
-        localStorage.getItem(
-            "agentes_universal_current_client"
-        );
-
-
-    if (currentClientId) {
-
-        return getClientById(
-            currentClientId
-        );
-    }
-
-
-    return database.clients[0] || null;
-}
-
-
-/* =========================================================
-   09. DEFINIR CLIENTE ATUAL
-   ========================================================= */
-
-function setCurrentClient(clientId) {
-
-    const client =
-        getClientById(clientId);
-
-
-    if (!client) {
-
-        return false;
-    }
-
-
-    localStorage.setItem(
-        "agentes_universal_current_client",
-        clientId
-    );
-
-
-    return true;
-}
-
-
-/* =========================================================
-   10. OBTER ASSINATURA DO CLIENTE
-   ========================================================= */
-
-function getClientSubscription(clientId) {
-
-    const database =
-        getDatabase();
-
-
-    return database.subscriptions.find(
-        subscription =>
-            subscription.clientId === clientId
-    ) || null;
-}
-
-
-/* =========================================================
-   11. VERIFICAR ASSINATURA
-   ========================================================= */
-
-function isSubscriptionActive(clientId) {
-
-    const subscription =
-        getClientSubscription(clientId);
-
-
-    if (!subscription) {
-
-        return false;
-    }
-
-
-    const now =
-        new Date();
-
-
-    const start =
-        new Date(
-            subscription.startAt
-        );
-
-
-    const end =
-        new Date(
-            subscription.endAt
-        );
-
-
-    return (
-        subscription.status === "active" &&
-        now >= start &&
-        now < end
-    );
-}
-
-
-/* =========================================================
-   12. DIAS RESTANTES
-   ========================================================= */
-
-function getSubscriptionDaysLeft(clientId) {
-
-    const subscription =
-        getClientSubscription(clientId);
-
-
-    if (!subscription) {
-
-        return 0;
-    }
-
-
-    const now =
-        new Date();
-
-
-    const end =
-        new Date(
-            subscription.endAt
-        );
-
-
-    const difference =
-        end.getTime() -
-        now.getTime();
-
-
-    if (difference <= 0) {
-
-        return 0;
-    }
-
-
-    return Math.ceil(
-        difference /
-        (1000 * 60 * 60 * 24)
-    );
-}
-
-
-/* =========================================================
-   13. FORMATAR DATA
-   ========================================================= */
-
-function formatDate(
-    dateValue,
-    includeTime = false
-) {
+function formatDate(dateValue) {
 
     if (!dateValue) {
-
         return "-";
     }
 
-
-    const date =
-        new Date(dateValue);
-
+    const date = new Date(dateValue);
 
     if (Number.isNaN(date.getTime())) {
-
         return "-";
     }
 
-
-    const options = {
-
-        day: "2-digit",
-
-        month: "2-digit",
-
-        year: "numeric"
-    };
-
-
-    if (includeTime) {
-
-        options.hour = "2-digit";
-
-        options.minute = "2-digit";
-    }
-
-
     return new Intl.DateTimeFormat(
-        "pt-BR",
-        options
+        APP.language,
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
     ).format(date);
+
 }
 
 
-/* =========================================================
-   14. FORMATAR MOEDA
-   ========================================================= */
+function formatDateTime(dateValue) {
+
+    if (!dateValue) {
+        return "-";
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+        return "-";
+    }
+
+    return new Intl.DateTimeFormat(
+        APP.language,
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    ).format(date);
+
+}
+
+
+/* ============================================================
+   6. UTILIDADES DE MOEDA
+   ============================================================ */
 
 function formatCurrency(value) {
 
+    const number = Number(value);
+
+    if (Number.isNaN(number)) {
+        return "R$ 0,00";
+    }
+
     return new Intl.NumberFormat(
-        "pt-BR",
+        APP.language,
         {
             style: "currency",
-            currency: "BRL"
+            currency: APP.currency
         }
-    ).format(
-        Number(value) || 0
-    );
+    ).format(number);
+
 }
 
 
-/* =========================================================
-   15. OBTER AGENTE
-   ========================================================= */
+/* ============================================================
+   7. UTILIDADES DE TEXTO
+   ============================================================ */
 
-function getAgentById(agentId) {
+function escapeHTML(value) {
 
-    const database =
-        getDatabase();
-
-
-    return database.agents.find(
-        agent => agent.id === agentId
-    ) || null;
-}
-
-
-/* =========================================================
-   16. OBTER AGENTES ATIVOS
-   ========================================================= */
-
-function getActiveAgents() {
-
-    const database =
-        getDatabase();
-
-
-    return database.agents.filter(
-        agent =>
-            agent.status === "active"
-    );
-}
-
-
-/* =========================================================
-   17. VERIFICAR PERMISSÃO
-   ========================================================= */
-
-function hasAgentPermission(
-    clientId,
-    agentId
-) {
-
-    const database =
-        getDatabase();
-
-
-    const permission =
-        database.agentPermissions.find(
-            item =>
-                item.clientId === clientId &&
-                item.agentId === agentId
-        );
-
-
-    return Boolean(
-        permission &&
-        permission.allowed === true
-    );
-}
-
-
-/* =========================================================
-   18. AGENTES PERMITIDOS
-   ========================================================= */
-
-function getClientAgents(clientId) {
-
-    const database =
-        getDatabase();
-
-
-    return database.agents.filter(
-        agent => {
-
-            const permission =
-                database.agentPermissions.find(
-                    item =>
-                        item.clientId === clientId &&
-                        item.agentId === agent.id
-                );
-
-
-            return (
-                agent.status === "active" &&
-                permission &&
-                permission.allowed === true
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   19. VERIFICAÇÃO CENTRAL DE ACESSO
-   =========================================================
-
-   Essa função será importante no futuro.
-
-   Fluxo:
-
-   1. Cliente existe?
-   2. Cliente está ativo?
-   3. Assinatura está ativa?
-   4. Agente existe?
-   5. Agente está ativo?
-   6. Cliente possui permissão?
-
-   Se tudo estiver correto:
-   acesso permitido.
-   ========================================================= */
-
-function canAccessAgent(
-    clientId,
-    agentId
-) {
-
-    const client =
-        getClientById(clientId);
-
-
-    if (!client) {
-
-        return {
-
-            allowed: false,
-
-            reason: "CLIENT_NOT_FOUND"
-        };
+    if (value === null || value === undefined) {
+        return "";
     }
 
+    const element = document.createElement("div");
 
-    if (client.status !== "active") {
+    element.textContent = String(value);
 
-        return {
+    return element.innerHTML;
 
-            allowed: false,
-
-            reason: "CLIENT_INACTIVE"
-        };
-    }
-
-
-    if (
-        !isSubscriptionActive(
-            clientId
-        )
-    ) {
-
-        return {
-
-            allowed: false,
-
-            reason: "SUBSCRIPTION_EXPIRED"
-        };
-    }
-
-
-    const agent =
-        getAgentById(agentId);
-
-
-    if (!agent) {
-
-        return {
-
-            allowed: false,
-
-            reason: "AGENT_NOT_FOUND"
-        };
-    }
-
-
-    if (agent.status !== "active") {
-
-        return {
-
-            allowed: false,
-
-            reason: "AGENT_INACTIVE"
-        };
-    }
-
-
-    if (
-        !hasAgentPermission(
-            clientId,
-            agentId
-        )
-    ) {
-
-        return {
-
-            allowed: false,
-
-            reason: "PERMISSION_DENIED"
-        };
-    }
-
-
-    return {
-
-        allowed: true,
-
-        reason: "ACCESS_GRANTED",
-
-        client,
-
-        agent
-    };
 }
 
 
-/* =========================================================
-   20. CRIAR LOG DE AUDITORIA
-   ========================================================= */
+function truncateText(value, maxLength = 100) {
 
-function createAuditLog({
-
-    action,
-
-    clientId = null,
-
-    agentId = null,
-
-    description = ""
-
-}) {
-
-    const database =
-        getDatabase();
-
-
-    const log = {
-
-        id:
-            "AUD-" +
-            Date.now(),
-
-        action,
-
-        clientId,
-
-        agentId,
-
-        description,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-
-    database.auditLogs.push(log);
-
-
-    saveDatabase(database);
-
-
-    return log;
-}
-
-
-/* =========================================================
-   21. REGISTRAR EXECUÇÃO
-   ========================================================= */
-
-function createExecution({
-
-    clientId,
-
-    agentId,
-
-    input = "",
-
-    status = "started"
-
-}) {
-
-    const database =
-        getDatabase();
-
-
-    const execution = {
-
-        id:
-            "EXE-" +
-            Date.now(),
-
-        clientId,
-
-        agentId,
-
-        input,
-
-        status,
-
-        startedAt:
-            new Date().toISOString(),
-
-        finishedAt: null,
-
-        output: ""
-    };
-
-
-    database.executions.push(
-        execution
-    );
-
-
-    saveDatabase(database);
-
-
-    return execution;
-}
-
-
-/* =========================================================
-   22. ATUALIZAR EXECUÇÃO
-   ========================================================= */
-
-function updateExecution(
-    executionId,
-    updates = {}
-) {
-
-    const database =
-        getDatabase();
-
-
-    const index =
-        database.executions.findIndex(
-            execution =>
-                execution.id === executionId
-        );
-
-
-    if (index === -1) {
-
-        return null;
+    if (!value) {
+        return "";
     }
 
+    const text = String(value);
 
-    database.executions[index] = {
-
-        ...database.executions[index],
-
-        ...updates
-    };
-
-
-    if (
-        updates.status === "completed" ||
-        updates.status === "error"
-    ) {
-
-        database.executions[index].finishedAt =
-            new Date().toISOString();
+    if (text.length <= maxLength) {
+        return text;
     }
 
+    return `${text.substring(0, maxLength)}...`;
 
-    saveDatabase(database);
-
-
-    return database.executions[index];
 }
 
 
-/* =========================================================
-   23. REGISTRAR LOG DE EXECUÇÃO
-   ========================================================= */
+/* ============================================================
+   8. UTILIDADES DE URL
+   ============================================================ */
 
-function createExecutionLog({
+function navigateTo(path) {
 
-    executionId,
-
-    level = "info",
-
-    message = ""
-
-}) {
-
-    const database =
-        getDatabase();
-
-
-    const log = {
-
-        id:
-            "EXL-" +
-            Date.now(),
-
-        executionId,
-
-        level,
-
-        message,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-
-    database.executionLogs.push(log);
-
-
-    saveDatabase(database);
-
-
-    return log;
-}
-
-
-/* =========================================================
-   24. OBTER ESTADO COMPLETO
-   ========================================================= */
-
-function getAppState() {
-
-    return {
-
-        app: APP,
-
-        config:
-            PLATFORM_CONFIG,
-
-        database:
-            getDatabase()
-    };
-}
-
-
-/* =========================================================
-   25. INICIALIZAÇÃO
-   ========================================================= */
-
-function initializeApp() {
-
-    if (APP.initialized) {
-
+    if (!path) {
         return;
     }
 
+    window.location.href = path;
 
-    getDatabase();
-
-
-    const currentClient =
-        getCurrentClient();
+}
 
 
-    if (
-        currentClient &&
-        !localStorage.getItem(
-            "agentes_universal_current_client"
-        )
-    ) {
+function openInNewTab(path) {
 
-        setCurrentClient(
-            currentClient.id
-        );
+    if (!path) {
+        return;
     }
 
+    window.open(path, "_blank", "noopener,noreferrer");
+
+}
+
+
+/* ============================================================
+   9. EVENT BUS GLOBAL
+   ============================================================ */
+
+const EventBus = {
+
+    events: {},
+
+    on(eventName, callback) {
+
+        if (!this.events[eventName]) {
+
+            this.events[eventName] = [];
+
+        }
+
+        this.events[eventName].push(callback);
+
+    },
+
+    off(eventName, callback) {
+
+        if (!this.events[eventName]) {
+            return;
+        }
+
+        this.events[eventName] =
+            this.events[eventName]
+                .filter(
+                    handler => handler !== callback
+                );
+
+    },
+
+    emit(eventName, data = null) {
+
+        if (!this.events[eventName]) {
+            return;
+        }
+
+        this.events[eventName].forEach(
+            callback => {
+
+                try {
+
+                    callback(data);
+
+                } catch (error) {
+
+                    console.error(
+                        `[EventBus] Erro no evento ${eventName}:`,
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+};
+
+
+/* ============================================================
+   10. ESTADO DA APLICAÇÃO
+   ============================================================ */
+
+const AppState = {
+
+    initialized: false,
+
+    currentUser: null,
+
+    currentClient: null,
+
+    currentAgent: null,
+
+    currentExecution: null,
+
+    currentPage: null,
+
+    loading: false,
+
+    error: null
+
+};
+
+
+function setAppState(key, value) {
+
+    if (!(key in AppState)) {
+
+        console.warn(
+            `[AppState] Propriedade desconhecida: ${key}`
+        );
+
+        return;
+
+    }
+
+    AppState[key] = value;
+
+}
+
+
+function getAppState(key = null) {
+
+    if (!key) {
+
+        return {
+            ...AppState
+        };
+
+    }
+
+    return AppState[key];
+
+}
+
+
+/* ============================================================
+   11. DETECÇÃO DE PÁGINA
+   ============================================================ */
+
+function getCurrentPage() {
+
+    const path = window.location.pathname;
+
+    if (path.endsWith("/index.html") || path === "/") {
+
+        return "home";
+
+    }
+
+    if (path.includes("/cliente/")) {
+
+        return "client";
+
+    }
+
+    if (path.includes("/admin/")) {
+
+        return "admin";
+
+    }
+
+    if (path.includes("/agentes/")) {
+
+        return "agent";
+
+    }
+
+    if (path.includes("login.html")) {
+
+        return "login";
+
+    }
+
+    if (path.includes("cadastro.html")) {
+
+        return "register";
+
+    }
+
+    if (path.includes("recuperar-senha.html")) {
+
+        return "recovery";
+
+    }
+
+    return "unknown";
+
+}
+
+
+/* ============================================================
+   12. VALIDAÇÃO DE CONFIGURAÇÃO
+   ============================================================ */
+
+function validateAppConfiguration() {
+
+    const errors = [];
+
+    if (!APP.name) {
+
+        errors.push("Nome da aplicação não configurado.");
+
+    }
+
+    if (!APP.version) {
+
+        errors.push("Versão da aplicação não configurada.");
+
+    }
+
+    if (!APP.language) {
+
+        errors.push("Idioma não configurado.");
+
+    }
+
+    if (!APP.timezone) {
+
+        errors.push("Timezone não configurado.");
+
+    }
+
+    if (!APP.currency) {
+
+        errors.push("Moeda não configurada.");
+
+    }
+
+    if (errors.length > 0) {
+
+        console.error(
+            "[Agentes Universal] Erros de configuração:",
+            errors
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* ============================================================
+   13. INICIALIZAÇÃO
+   ============================================================ */
+
+function initializeApp() {
+
+    if (AppState.initialized) {
+
+        return;
+
+    }
+
+    const valid =
+        validateAppConfiguration();
+
+    if (!valid) {
+
+        console.error(
+            "[Agentes Universal] Inicialização interrompida."
+        );
+
+        return;
+
+    }
+
+    AppState.currentPage =
+        getCurrentPage();
+
+    AppState.initialized = true;
 
     APP.initialized = true;
 
-
-    console.log(
-        "=========================================="
+    EventBus.emit(
+        "app:initialized",
+        {
+            page: AppState.currentPage,
+            version: APP.version
+        }
     );
 
-    console.log(
-        "AGENTES UNIVERSAL"
-    );
-
-    console.log(
-        "Plataforma inicializada."
-    );
-
-    console.log(
-        "Versão:",
-        APP.version
-    );
-
-    console.log(
-        "Modo:",
-        APP.mode
-    );
-
-    console.log(
-        "=========================================="
-    );
 }
 
 
-/* =========================================================
-   26. INICIALIZAR AUTOMATICAMENTE
-   ========================================================= */
+/* ============================================================
+   14. LOG CONTROLADO
+   ============================================================ */
 
-if (
-    document.readyState === "loading"
-) {
+const Logger = {
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeApp
-    );
+    info(message, data = null) {
 
-} else {
+        console.info(
+            `[Agentes Universal] ${message}`,
+            data ?? ""
+        );
 
-    initializeApp();
+    },
+
+    warn(message, data = null) {
+
+        console.warn(
+            `[Agentes Universal] ${message}`,
+            data ?? ""
+        );
+
+    },
+
+    error(message, error = null) {
+
+        console.error(
+            `[Agentes Universal] ${message}`,
+            error ?? ""
+        );
+
+    }
+
+};
+
+
+/* ============================================================
+   15. API FUTURA
+   ============================================================ */
+
+/**
+ * Esta função NÃO executa chamadas reais neste momento.
+ *
+ * Futuramente:
+ *
+ * frontend
+ *    ↓
+ * api.js
+ *    ↓
+ * Netlify Functions
+ *    ↓
+ * backend
+ */
+
+async function apiRequest() {
+
+    if (!PLATFORM_CONFIG.api.enabled) {
+
+        throw new Error(
+            "API ainda não está habilitada."
+        );
+
+    }
+
 }
 
 
-/* =========================================================
-   27. EXPOSIÇÃO GLOBAL
-   =========================================================
-
-   Essas funções ficam disponíveis para os outros
-   arquivos JavaScript da plataforma.
-
-   Futuramente essa arquitetura poderá ser substituída
-   por módulos JavaScript/backend.
-   ========================================================= */
+/* ============================================================
+   16. NAMESPACE PRINCIPAL
+   ============================================================ */
 
 window.AGENTES_UNIVERSAL = {
 
@@ -1322,47 +727,62 @@ window.AGENTES_UNIVERSAL = {
 
     PLATFORM_CONFIG,
 
-    getDatabase,
+    STATUS,
 
-    saveDatabase,
+    USER_ROLES,
 
-    resetDatabase,
+    EXECUTION_STATUS,
 
-    getClientById,
+    AppState,
 
-    getCurrentClient,
+    EventBus,
 
-    setCurrentClient,
+    Logger,
 
-    getClientSubscription,
+    generateId,
 
-    isSubscriptionActive,
+    now,
 
-    getSubscriptionDaysLeft,
+    nowISO,
 
     formatDate,
 
+    formatDateTime,
+
     formatCurrency,
 
-    getAgentById,
+    escapeHTML,
 
-    getActiveAgents,
+    truncateText,
 
-    hasAgentPermission,
+    navigateTo,
 
-    getClientAgents,
+    openInNewTab,
 
-    canAccessAgent,
+    getCurrentPage,
 
-    createAuditLog,
-
-    createExecution,
-
-    updateExecution,
-
-    createExecutionLog,
+    setAppState,
 
     getAppState,
 
-    initializeApp
+    validateAppConfiguration,
+
+    initializeApp,
+
+    apiRequest
+
 };
+
+
+/* ============================================================
+   17. INICIALIZAÇÃO AUTOMÁTICA
+   ============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        initializeApp();
+
+    }
+);
